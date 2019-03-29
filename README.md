@@ -4,8 +4,6 @@ Este repositório pode user usado como ponto de partida para fazer deploy de mod
 
 A aplicativo simples descrito aqui está em https://fastai-v3.onrender.com. Teste com imagens de urso!
 
-<img alt="Render" src="/images/render/render.svg" class="provider-logo" width="300">
-
 Este é um guia rápido para fazer o deploy no Render dos seus modelos treinados com apenas alguns cliques. Ele vem com este repositório template que usa o modelo de Classificação de Ursos do Jeremy da Lição 2.
 
 ## Setup único
