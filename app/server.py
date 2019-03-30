@@ -53,7 +53,7 @@ def index(request):
 async def analyze(request):
     data = await request.form()
     img_bytes = await (data['file'].read())
-    img = open_image(PIL.Image.open(data).convert('LA'))
+    img = PIL.Image.open(data).convert('LA')
     prediction = learn.predict(img)[0]
     return JSONResponse({'result': str(prediction)})
 
