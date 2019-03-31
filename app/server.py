@@ -9,7 +9,7 @@ from fastai import *
 from fastai.vision import *
 
 from PIL import Image
-from tempfile import TemporaryFile
+from tempfile import NamedTemporaryFile
 
 export_file_url = 'https://storage.googleapis.com/mpirprf/export.pkl'
 export_file_name = 'export.pkl'
@@ -21,6 +21,11 @@ app = Starlette()
 app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_headers=['X-Requested-With', 'Content-Type'])
 app.mount('/static', StaticFiles(directory='app/static'))
 
+def acc_camvid(input, target):
+    target = target.squeeze(1)
+    mask = target != 0
+    return (input.argmax(dim=1)[mask]==target[mask]).float().mean()
+
 async def download_file(url, dest):
     if dest.exists(): return
     async with aiohttp.ClientSession() as session:
@@ -31,6 +36,7 @@ async def download_file(url, dest):
 async def setup_learner():
     await download_file(export_file_url, path/export_file_name)
     try:
+        defaults.device = torch.device('cpu')
         learn = load_learner(path, export_file_name)
         return learn
     except RuntimeError as e:
@@ -40,6 +46,8 @@ async def setup_learner():
             raise RuntimeError(message)
         else:
             raise
+
+defaults.device = torch.device('cpu')
 
 loop = asyncio.get_event_loop()
 tasks = [asyncio.ensure_future(setup_learner())]
@@ -57,9 +65,9 @@ async def analyze(request):
     img_bytes = await (data['file'].read())
     img = open_image(BytesIO(img_bytes))
     y = learn.predict(img)[0]
-    img_tmp = TemporaryFile()
-    y_tmp = TemporaryFile()
-    out_tmp = TemporaryFile()
+    img_tmp = NamedTemporaryFile(suffix='.jpg')
+    y_tmp = NamedTemporaryFile(suffix='.jpg')
+    out_tmp = NamedTemporaryFile(suffix='.jpg')
     
     img.save(img_tmp)
     y.save(y_tmp)
