@@ -72,7 +72,7 @@ async def analyze(request):
     img.save(img_tmp)
     y.save(y_tmp)
     
-    m1 = Image.open(img_tmp)
+    im1 = Image.open(img_tmp)
     im2 = Image.open(y_tmp)
     blended = Image.blend(im1, im2, alpha=0.5)
     blended.save(out_tmp)
