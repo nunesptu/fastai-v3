@@ -1,5 +1,5 @@
 from starlette.applications import Starlette
-from starlette.responses import HTMLResponse, JSONResponse
+from starlette.responses import HTMLResponse, JSONResponse, FileResponse
 from starlette.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 import uvicorn, aiohttp, asyncio
@@ -8,12 +8,13 @@ from io import BytesIO
 from fastai import *
 from fastai.vision import *
 
-# export_file_url = 'https://www.dropbox.com/s/v6cuuvddq73d1e0/export.pkl?raw=1'
-export_file_url = 'https://www.dropbox.com/s/6bgq8t6yextloqp/export.pkl?raw=1'
-export_file_url = 'https://drive.google.com/uc?export=download&id=13Nxml5y0VVrn7J8GjTuxZDO1WwR2YslX'
+from PIL import Image
+from tempfile import TemporaryFile
+
+export_file_url = 'https://storage.googleapis.com/mpirprf/export.pkl'
 export_file_name = 'export.pkl'
 
-classes = ['macbook', 'notmacbook']
+classes = ['parabrisas']
 path = Path(__file__).parent
 
 app = Starlette()
@@ -55,8 +56,21 @@ async def analyze(request):
     data = await request.form()
     img_bytes = await (data['file'].read())
     img = open_image(BytesIO(img_bytes))
-    prediction = learn.predict(img)[0]
-    return JSONResponse({'result': str(prediction)})
+    y = learn.predict(img)[0]
+    img_tmp = TemporaryFile()
+    y_tmp = TemporaryFile()
+    out_tmp = TemporaryFile()
+    
+    img.save(img_tmp)
+    y.save(y_tmp)
+    
+    m1 = Image.open(img_tmp)
+    im2 = Image.open(y_tmp)
+    blended = Image.blend(im1, im2, alpha=0.5)
+    blended.save(out_tmp)
+    
+    response = FileResponse(out_tmp)
+    await response(receive, send)
 
 if __name__ == '__main__':
     if 'serve' in sys.argv: uvicorn.run(app=app, host='0.0.0.0', port=5042)
