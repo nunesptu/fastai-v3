@@ -65,19 +65,19 @@ async def analyze(request):
     img_bytes = await (data['file'].read())
     img = open_image(BytesIO(img_bytes))
     y = learn.predict(img)[0]
-    img_tmp = NamedTemporaryFile(suffix='.jpg')
-    y_tmp = NamedTemporaryFile(suffix='.jpg')
-    out_tmp = NamedTemporaryFile(suffix='.jpg')
+    #img_tmp = NamedTemporaryFile(suffix='.jpg')
+    y_tmp = NamedTemporaryFile(suffix='.png')
+    #out_tmp = NamedTemporaryFile(suffix='.jpg')
     
-    img.save(img_tmp)
+    #img.save(img_tmp)
     y.save(y_tmp)
     
-    im1 = Image.open(img_tmp)
-    im2 = Image.open(y_tmp)
-    blended = Image.blend(im1, im2, alpha=0.5)
-    blended.save(out_tmp)
+    #im1 = Image.open(img_tmp)
+    #im2 = Image.open(y_tmp)
+    #blended = Image.blend(im1, im2, alpha=0.5)
+    #blended.save(out_tmp)
     
-    response = FileResponse(out_tmp)
+    response = FileResponse(y_tmp)
     await response(receive, send)
 
 if __name__ == '__main__':
