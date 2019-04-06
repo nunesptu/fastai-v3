@@ -59,7 +59,7 @@ async def analyze(request):
     img_bytes = await (data['file'].read())
     img = open_image(BytesIO(img_bytes))
     prediction = learn.predict(img)[0]
-    os.makedirs('images') if not os.path.exists('images')
+    if not os.path.exists('images'): os.makedirs('images')
     img.save(f'images/%s.png' % uuid_str)
     return JSONResponse({'result': str(prediction), 'classes': classes, 'img_id': uuid_str})
 
