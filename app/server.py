@@ -1,9 +1,10 @@
 from starlette.applications import Starlette
-from starlette.responses import HTMLResponse, JSONResponse
+from starlette.responses import HTMLResponse, JSONResponse, RedirectResponse
 from starlette.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 import uvicorn, aiohttp, asyncio
 import os
+import uuid
 from io import BytesIO
 
 from fastai import *
@@ -22,9 +23,11 @@ app.mount('/static', StaticFiles(directory='app/static'))
 async def download_file(url, dest):
     if dest.exists(): return
     async with aiohttp.ClientSession() as session:
+        print('Saving model...')
         async with session.get(url) as response:
             data = await response.read()
             with open(dest, 'wb') as f: f.write(data)
+            print('Done')
 
 async def setup_learner():
     await download_file(export_file_url, path/export_file_name)
@@ -51,11 +54,22 @@ def index(request):
 
 @app.route('/analyze', methods=['POST'])
 async def analyze(request):
+    uuid_str = str(uuid.uuid4())
     data = await request.form()
     img_bytes = await (data['file'].read())
     img = open_image(BytesIO(img_bytes))
     prediction = learn.predict(img)[0]
-    return JSONResponse({'result': str(prediction)})
+    img.save(f'images/%s.png' % uuid_str)
+    return JSONResponse({'result': str(prediction), 'classes': classes, 'img_id': uuid_str})
+
+@app.route('/report', methods=['POST'])
+async def report(request):
+    report = await request.json()
+    for clazz in classes:
+        if not os.path.exists('images/%s' % clazz): os.makedirs('images/%s' % clazz)
+
+    os.rename('images/%s.png' %  report['img_id'], 'images/%s/%s.png' % (report['class'], report['img_id']))
+    return RedirectResponse(url='/')
 
 if __name__ == '__main__':
     if 'serve' in sys.argv:
