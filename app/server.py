@@ -2,6 +2,7 @@ from starlette.applications import Starlette
 from starlette.responses import HTMLResponse, JSONResponse, RedirectResponse
 from starlette.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
+from google.cloud import storage
 import uvicorn, aiohttp, asyncio
 import os
 import uuid
@@ -13,12 +14,33 @@ from fastai.vision import *
 export_file_url = 'https://drive.google.com/uc?export=download&id=13Nxml5y0VVrn7J8GjTuxZDO1WwR2YslX'
 export_file_name = 'export.pkl'
 
+bucket_name = 'macornotbook'
+
 classes = ['macbook', 'notmacbook']
 path = Path(__file__).parent
 
 app = Starlette()
 app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_headers=['X-Requested-With', 'Content-Type'])
 app.mount('/static', StaticFiles(directory='app/static'))
+
+def rename_blob(blob_name, new_name):
+    """Renames a blob."""
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+
+    new_blob = bucket.rename_blob(blob, new_name)
+
+    print('Blob {} has been renamed to {}'.format(
+        blob.name, new_blob.name))
+
+def upload_blob(data, destination_blob_name):
+    """Uploads a file to the bucket."""
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+    blob = bucket.blob(destination_blob_name)
+    blob.upload_from_string(data, content_type='image/jpg')
+    print('File uploaded to {}.'.format(destination_blob_name))
 
 async def download_file(url, dest):
     if dest.exists(): return
@@ -59,17 +81,20 @@ async def analyze(request):
     img_bytes = await (data['file'].read())
     img = open_image(BytesIO(img_bytes))
     prediction = learn.predict(img)[0]
-    if not os.path.exists('images'): os.makedirs('images')
-    img.save(f'images/%s.png' % uuid_str)
+    # Save image to google cloud
+    print('Saving to google cloud...')
+    upload_blob(img_bytes, uuid_str)
+    print('Done.')
     return JSONResponse({'result': str(prediction), 'classes': classes, 'img_id': uuid_str})
 
 @app.route('/report', methods=['POST'])
 async def report(request):
     report = await request.json()
-    for clazz in classes:
-        if not os.path.exists('images/%s' % clazz): os.makedirs('images/%s' % clazz)
+    new_name = '%s/%s' % (report['class'], report['img_id'])
 
-    os.rename('images/%s.png' %  report['img_id'], 'images/%s/%s.png' % (report['class'], report['img_id']))
+    print("Moving to %s..." % new_name)
+    rename_blob(report['img_id'], new_name)
+    print('Done')
     return RedirectResponse(url='/')
 
 if __name__ == '__main__':
