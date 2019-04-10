@@ -72,49 +72,49 @@ Os passos a seguir consideram que você já tem uma conta no gcloud.
     ![](Captura_de_Tela_2019-04-10_as_13-a8eda3de-1e0f-4b82-8a0f-ae3465294c22.41.42.png)
 
 5. Faça o clone da aplicação modificada e entre no diretório.
-Note que o seu endereço vai ser diferente do meu.
+    Note que o seu endereço vai ser diferente do meu.
 
-`git clone https://github.com/weltonrodrigo/fastai-v3.git`
+    `git clone https://github.com/weltonrodrigo/fastai-v3.git`
 
-    ![](Untitled-7d38f5b9-7231-4dcc-80c0-c27d89432ddd.png)
+    ![git clone](Untitled-7d38f5b9-7231-4dcc-80c0-c27d89432ddd.png)
 
 6. Faça o login no heroku:
 
-`heroku login`
+    `heroku login`
+    
+    O cliente heroku vai pedir que você aperte enter e depois apresentar um link para ser aberto na internet. Esse link vai te levar para a página de login. Nessa tela você pode fazer seu cadastro se ainda não tiver. Depois da autenticação bem sucedida, o cliente vai informar que está logado.
 
-O cliente heroku vai pedir que você aperte enter e depois apresentar um link para ser aberto na internet. Esse link vai te levar para a página de login. Nessa tela você pode fazer seu cadastro se ainda não tiver. Depois da autenticação bem sucedida, o cliente vai informar que está logado.
-
-    ![](Untitled-03640a1d-0ff2-4a86-a18b-5f144d9b7b64.png)
+    ![heroku login](Untitled-03640a1d-0ff2-4a86-a18b-5f144d9b7b64.png)
 
 7. Crie um novo app no Heroku para receber sua aplicação:
 
-`heroku create nome-da-aplicacao`
+    `heroku create nome-da-aplicacao`
 
-O nome da aplicação também vai ser o endereço dela na internet. No exemplo acima, seria nome-da-aplicacao.app.herokuapp.com. Caso você não queira um nome específico, ele vai criar um nome aleatório.
+    O nome da aplicação também vai ser o endereço dela na internet. No exemplo acima, seria nome-da-aplicacao.app.herokuapp.com. Caso você não queira um nome específico, ele vai criar um nome aleatório.
 
-    ![](Untitled-36588520-6e31-4263-928d-7e0fb45a7119.png)
+    ![heroku create nome-da-aplicacao](Untitled-36588520-6e31-4263-928d-7e0fb45a7119.png)
 
 8. É necessário informar ao cliente docker como fazer o login no heroku, mas o próprio cliente toma conta disso:
 
-`heroku container:login`
+    `heroku container:login`
 
-    ![](Untitled-7b6266a4-8d15-4417-83ea-3b60ee693a9f.png)
+    ![heroku container:login](Untitled-7b6266a4-8d15-4417-83ea-3b60ee693a9f.png)
 
 9. Agora para construir e enviar o container para o heroku:
 Isso deve levar em torno de 5 minutos. O print abaixo mostra só o começo do texto de saída gerado pelo comando.
 
-`heroku container:push web`
+    `heroku container:push web`
 
-    ![](Untitled-c913a59c-f14b-4ab4-848a-233c0f038be4.png)
+    ![heroku container:push web](Untitled-c913a59c-f14b-4ab4-848a-233c0f038be4.png)
 
     Se a construção e envio forem bem sucedidos, deve gerar uma saída parecida com esta:
 
-    ![](Untitled-746949f5-f41b-432c-84e3-0f8e3f0435b3.png)
+    ![heroku container:push web](Untitled-746949f5-f41b-432c-84e3-0f8e3f0435b3.png)
 
 10. Agora é necessário informar o keroku que faça o deploy propriamente dito do container criado:
 
-`heroku container:release web`
+    `heroku container:release web`
 
-    ![](Untitled-022ee8e9-51b9-491b-a2fe-641c363ee8c5.png)
+    ![heroku container:release web](Untitled-022ee8e9-51b9-491b-a2fe-641c363ee8c5.png)
 
 11. O aplicativo já estará disponível https://<nome_da_aplicação>.herokuapp.com. No nosso exemplo em https://testedoherokufastai.herokuapp.com.
