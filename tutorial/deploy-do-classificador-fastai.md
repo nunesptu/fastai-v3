@@ -4,24 +4,24 @@ Existem várias formas de colocar no ar o seu classificador baseado em fast.ai. 
 
 Uma opção que se destaca é o Render.com, que é uma plataforma criada pelo mesmo criador do Crestle. O tutorial oficial está em [https://course.fast.ai/deployment_render.html](https://course.fast.ai/deployment_render.html).
 
-Outra opção, essa possível de ser utilizada totalmente gratuita é o Heroku.
+Outra opção, essa possível de ser utilizada totalmente gratuita, é o Heroku.
 
 A seguir vou mostrar como fazer o deploy nessas duas opções.
 
 ## Primeiro: exporte o modelo treinado.
 
-Gere o seu modelo normalmente e salve o `export.pkl` com learn.export.
+Gere o seu modelo normalmente e salve o `export.pkl` `com learn.export()`.
 
 Coloque que arquivo no google drive ou dropbox (porque é de graça). É necessário gerar um link para o arquivo usando um dos dois serviços abaixo:
 
 - Google Drive: Use [este gerador de links](https://www.wonderplugin.com/online-tools/google-drive-direct-link-generator/).
 - Dropbox: Use [este gerador de links](https://syncwithtech.blogspot.com/p/direct-download-link-generator.html).
 
-## Segundo: prepare a aplicação pré-pronta.
+## Segundo: ajuste a aplicação pré-pronta.
 
-Faça um fork no github do repositório base que contém uma aplicação pré-pronta e customizável.
+Faça um fork no github deste repositório base, que contém uma aplicação pré-pronta e customizável.
 
-Edite, no próprio Github arquivo `app/server.py` para incluir:
+Edite, no próprio Github, o arquivo `app/server.py` para incluir:
 
 1. O endereço do `export.pkl` em `export_file_url`.
 2. Troque o nome das classes geradas pelo seu modelo em `classes =['macbook', 'notmacbook']`.
@@ -33,20 +33,20 @@ Edite, no próprio Github arquivo `app/server.py` para incluir:
 
 ## Deploy no Render
 
-Para fazer sua conta no Render, use o link [render.com/i/fastai](http://render.com/i/fastai) Cada conta criada por esse link vem com 5 dólares de crédito e depois disso cada aplicação custa 5 dólares por mês, faturada por segundo.
+Para fazer sua conta no Render, use o link [render.com/i/fastai](http://render.com/i/fastai). Cada conta criada por esse link vem com 5 dólares de crédito e depois disso cada aplicação custa 5 dólares por mês, faturada por segundo.
 
 Após o cadastro crie uma nova aplicação em "New Web Service" e aponte para o seu repositório fork criado anteriormente.
 
 1. Simples assim.
 2. E pronto!
 
-Agora, toda vez que você editar a aplicação, o Render detecta automaticamente refaz o deploy.
+Agora, toda vez que você editar a aplicação, o Render detecta automaticamente e refaz o deploy.
 
 ## Deploy no Heroku
 
 Apesar de ser mais barato, o deploy no Heroku exige passos adicionais, que devem ser repetidos manualmente sempre que o código da aplicação for alterado na Github.
 
-Normalmente o deploy no Heroku exige apenas o código da aplicação, mas no caso dos modelos do fastai, ela é grande demais para o método tradicional e exige o deploy em containers docker.
+Normalmente o deploy no Heroku exige apenas o código da aplicação, mas, no caso dos modelos do fastai, ela é grande demais para o método tradicional e exige o deploy em containers docker.
 
 Para isso, é necessário executar os comandos numa máquina com docker instalado.
 
@@ -67,7 +67,7 @@ Os passos a seguir consideram que você já tem uma conta no gcloud.
 
 4. Instale o cliente da heroku:
 
-    `curl [https://cli-assets.heroku.com/install.sh](https://cli-assets.heroku.com/install.sh) | sh`
+    `curl https://cli-assets.heroku.com/install.sh | sh`
 
     ![](Captura_de_Tela_2019-04-10_as_13-a8eda3de-1e0f-4b82-8a0f-ae3465294c22.41.42.png)
 
