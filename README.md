@@ -1,6 +1,6 @@
 # Aplicação template para fazer deploy de modelos [fast.ai](https://www.fast.ai).
 
-Este repositório pode user usado como ponto de partida para fazer deploy de modelos do fast.ai no Render ou no Heroku.
+Este repositório pode user usado como ponto de partida para fazer deploy de modelos do fast.ai no Render, Heroku ou Google Cloud Run.
 
 A aplicativo simples descrito aqui está em https://macornotbook.onrender.com. Teste com imagens de notebook!
 

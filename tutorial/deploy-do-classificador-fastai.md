@@ -4,9 +4,9 @@ Existem várias formas de colocar no ar o seu classificador baseado em fast.ai. 
 
 Uma opção que se destaca é o Render.com, que é uma plataforma criada pelo mesmo criador do Crestle. O tutorial oficial está em [https://course.fast.ai/deployment_render.html](https://course.fast.ai/deployment_render.html).
 
-Outra opção, essa possível de ser utilizada totalmente gratuita, é o Heroku.
+Duas outras opções, possíveis de serem utilizadas gratuitamente são o Heroku e o Google Cloud Run.
 
-A seguir vou mostrar como fazer o deploy nessas duas opções.
+A seguir vou mostrar como fazer o deploy nessas três opções.
 
 ## Primeiro: exporte o modelo treinado.
 
@@ -118,3 +118,27 @@ Isso deve levar em torno de 5 minutos. O print abaixo mostra só o começo do te
     ![heroku container:release web](Untitled-022ee8e9-51b9-491b-a2fe-641c363ee8c5.png)
 
 11. O aplicativo já estará disponível https://<nome_da_aplicação>.herokuapp.com. No nosso exemplo em https://testedoherokufastai.herokuapp.com.
+
+## Deploy no Google Cloud Run
+
+O Google Cloud tem também agora uma forma simplificada de fazer deploys. Um pouco mais complicado que o Render, mais simples que o Heroku.
+
+Partindo do pressuposto de que você já está com acesso ao Google Cloud, procure pelo serviço [Build](https://console.cloud.google.com/cloud-build/builds) e:
+
+![Criação do acionador no Google Cloud Build](01acionador.gif)]
+
+1. Crie um novo acionador em [https://console.cloud.google.com/cloud-build/triggers](https://console.cloud.google.com/cloud-build/triggers)
+2. Utilize o seu repositório no Github como fonte para esse acionador, alterando apenas o nome da imagem criada. O padrão do cloud build é construir a imagem usando o hash do commit, mas é mais simples utilizar a *tag* latest.
+3. Agora, sempre que o seu código no github for alterado, o cloud build constrói uma nova versão do seu container.
+
+Uma vez que o container tenha sido criado, ele fica disponível para receber o deploy no [Cloud Run](https://console.cloud.google.com/run):
+
+![Execução do deploy no Cloud Run](02deploy.gif)
+
+1. Crie um novo serviço utilizando a imagem de container criada no passo anterior.
+2. Certifique-se de marcar a opção de permitir chamadas não autenticadas, ou a sua aplicação irá ficar acessível apenas a outros serviços dentro da nuvem do google.
+3. Aumente o limite de memória para 2gb, para que seu modelo seja corretamente carregado pelo fastai e consiga realizar as inferências.
+
+O deploy de alterações não é automático, mas é tão simples quanto entrar nos detalhes do servidor no Cloud Run e usar o botão Deploy New Revision.
+
+![Deploy de nova versão](03versao.gif)
