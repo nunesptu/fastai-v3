@@ -7,12 +7,13 @@ import os
 from io import BytesIO
 
 from fastai import *
-from fastai.vision import *
+from fastai.text import *
 
-export_file_url = 'https://drive.google.com/uc?export=download&id=13Nxml5y0VVrn7J8GjTuxZDO1WwR2YslX'
+export_file_url = 'https://storage.googleapis.com/gde-dl-bsb/export.pkl'
 export_file_name = 'export.pkl'
 
-classes = ['macbook', 'notmacbook']
+classes = [ 'Alteração pela empresa aérea', 'Alteração pelo passageiro', 'Assistência ao PNAE', 'Check-in e embarque', 'Execução do voo', 'Oferta e compra', 'Outros', 'Programas de Fidelidade', 'Reclamações contra valores e regras do contrato', 'Reembolso', 'Transporte de bagagem']
+
 path = Path(__file__).parent
 
 app = Starlette()
@@ -52,10 +53,13 @@ def index(request):
 @app.route('/analyze', methods=['POST'])
 async def analyze(request):
     data = await request.form()
-    img_bytes = await (data['file'].read())
-    img = open_image(BytesIO(img_bytes))
-    prediction = learn.predict(img)[0]
-    return JSONResponse({'result': str(prediction)})
+    input_text = data['input_text']
+    p = learn.predict(input_text)
+    result = { 'classe': str(p[0]),
+               'probs': list(zip(classes, p[2].tolist()))
+             }
+
+    return JSONResponse(result)
 
 if __name__ == '__main__':
     if 'serve' in sys.argv:
