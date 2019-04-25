@@ -57,7 +57,12 @@ button:focus {outline:0;}
   font-family: monospace;
   font-size: 1em;
   height: 5em;
-  width: 80%
+  width: 100%;
+  padding: 1em;
+}
+
+td{
+  padding-bottom: 1em;
 }
 
 tr.result{
