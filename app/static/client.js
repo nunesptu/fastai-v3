@@ -1,15 +1,23 @@
 var el = x => document.getElementById(x);
 
-function showPicker(inputId) { el('file-input').click(); }
+function create_table(response){
 
-function showPicked(input) {
-    el('upload-label').innerHTML = input.files[0].name;
-    var reader = new FileReader();
-    reader.onload = function (e) {
-        el('image-picked').src = e.target.result;
-        el('image-picked').className = '';
-    }
-    reader.readAsDataURL(input.files[0]);
+    var result = response['classe']
+
+    var rows = ""
+    response["probs"].forEach(tuple => {
+        var clazz = tuple[0]
+        var percent = parseFloat(tuple[1] * 100 ).toFixed(4)+"%"
+        var css = ''
+
+        if (clazz === result){
+            css = 'class=result'
+        }
+
+        rows += `<tr ${css}><td>${clazz}</td><td>${percent}</td></tr>\n`
+    })
+
+    return `<table class='center'><thead><tr><td>Classe</td><td>Probabilidade</td></tr></thead><tbody>${rows}</tbody></table>`
 }
 
 function analyze() {
@@ -21,7 +29,7 @@ function analyze() {
     xhr.onload = function(e) {
         if (this.readyState === 4) {
             var response = JSON.parse(e.target.responseText);
-            el('result-label').innerHTML = `Result = ${response['classe']}`;
+            el('result-label').innerHTML = create_table(response);
         }
         el('analyze-button').innerHTML = 'Analisar';
     }
