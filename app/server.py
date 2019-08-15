@@ -9,10 +9,12 @@ from io import BytesIO
 from fastai import *
 from fastai.vision import *
 
-export_file_url = 'https://drive.google.com/uc?export=download&id=13Nxml5y0VVrn7J8GjTuxZDO1WwR2YslX'
+export_file_url = 'https://drive.google.com/uc?export=download&id=1I0SpFr6gkoJePSiUk3IQzfbnr5W0IPDz'
+
 export_file_name = 'export.pkl'
 
-classes = ['macbook', 'notmacbook']
+classes = ['Andiroba', 'Angelim_Armargoso', 'Angelim_Pedra', 'Angelim_Vermelho', 'Breu_Vermelho', 'Catuaba', 'Cedrinho', 'Cedro', 'Classe_Desconhecida', 'Cuiarana', 'Cumaru_Amarelo', 'Cupiuba', 'Curupixaa', 'Goiabao', 'Ipe_Amarelo', 'Jacareuba', 'Jequitiba_Rosa_Tauarí', 'Louro_Vermelho', 'Maccaranduba', 'Mandioqueira', 'Muiracatiara_Rajada', 'Pau_marfim', 'Peroba_Mico', 'Roxinho', 'Sucupira_Parda', 'Tanibuca', 'Tatajuba', 'Tauari_Vermelho']
+
 path = Path(__file__).parent
 
 app = Starlette()
