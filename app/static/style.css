@@ -28,7 +28,7 @@ body {
     font-size: 30px;
     margin-top: 1em;
     margin-bottom: 1em;
-    color: #262626;
+    color: #4682B4;
 }
 
 .content {
@@ -55,19 +55,35 @@ button.choose-file-button {
   height: 40px;
   border-radius: 2px;
   background-color: #ffffff;
-  border: solid 1px #7052CB;
-  font-size: 13px;
-  color: #7052CB;
+  border: solid 1px #448AFF;
+  font-size: 14px;
+  color: #448AFF;
 }
 
 button.analyze-button {
     width: 200px;
     height: 40px;
-    border: solid 1px #7052CB;
+    border: solid 1px #448AFF;
     border-radius: 2px;
-    background-color: #7052CB;
+    background-color: #448AFF;
     font-size: 13px;
     color: #ffffff;
 }
+footer p.copyright {
+    padding: 25px 0;
+    background: #4267B2;
+    border-top: 1px dotted #717173;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-family: 'Montserrat', sans-serif;
+    color: #ffffff;
+    text-align: center;
+    margin: 0;
 
+}   
+
+#site_C {
+    text-decoration: none;
+    color: #ffffff;
+}
 button:focus {outline:0;}
