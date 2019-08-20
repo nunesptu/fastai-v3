@@ -41,7 +41,7 @@ body {
 
 .upload-label {
     padding: 10px;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .result-label {
@@ -69,6 +69,7 @@ button.analyze-button {
     font-size: 13px;
     color: #ffffff;
 }
+
 footer p.copyright {
     padding: 25px 0;
     background: #4267B2;
